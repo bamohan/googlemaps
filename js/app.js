@@ -106,13 +106,24 @@ var ViewModel = function() {
   this.filteredList = ko.computed(function() {
     var filter = self.currentFilter();
     if (!filter) {
-      return self.locationList();
+   	  var originalList = self.locationList();
+   	  for (var i=0; i<originalList.length; i++){
+   	  	originalList[i].marker.setVisible(true);
+   	  }
+      return originalList;
     } else {
-      return ko.utils.arrayFilter(self.locationList(), function(item) {
-        return item.title.toLowerCase().includes(filter.toLowerCase());
+      filtered = ko.utils.arrayFilter(self.locationList(), function(item) {
+        if  (item.title.toLowerCase().includes(filter.toLowerCase())){
+        	item.marker.setVisible(true);
+        	return true;
+        } else {
+        	item.marker.setVisible(false);
+        	return false;
+        }
       });
+      return filtered;
     }
-  }); 
+  });
 
 };
 
