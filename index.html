@@ -7,7 +7,6 @@
     <meta name="author" content="BM">
     <title> Project 9 - Google maps </title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-     <script src="js/lib/knockout-3.4.0.js"></script>
   </head>
 
   <body>
@@ -15,14 +14,18 @@
       <input type="text" class="search" data-bind="textInput: currentFilter, valueUpdate: input" placeholder="Search.."> 
     </p>
     <ul id="location-list" data-bind="foreach: filteredList">
-      <li data-bind="text: title, click: $parent.setCurrentLocation"></li>
+    <li><a href="cupertino.org" data-bind="text: title, click: $parent.selectLocation" target="_blank"></a></li>
+      
     </ul>
     <div id="map"></div>
 
     <script 
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJc2HmAHWCveDSrOumQXmYYebyePzL5HM&v=3">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJc2HmAHWCveDSrOumQXmYYebyePzL5HM&v=3" onerror="mapError()">
     </script>
-
+    <script src="js/lib/jquery-3.1.1.min.js"></script>
+    <script src="js/lib/knockout-3.4.0.js"></script>
+    <script src="js/lib/oauth-signature.min.js"></script>
     <script type="text/javascript" src="js/app.js" ></script>
+
   </body>
 </html>
