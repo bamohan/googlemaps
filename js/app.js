@@ -181,7 +181,7 @@ function populateInfoWindow(marker, yelp_id) {
     // Make sure the marker property is cleared if the infowindow is closed.
     largeInfowindow.addListener('closeclick', function() {
       largeInfowindow.marker.setAnimation(null);
-      largeInfowindow.setMarker(null);
+      largeInfowindow.marker = null;
     });
   }
 }
