@@ -1,7 +1,7 @@
 var map;
 var markers = [];
 var yelp_phone_numbers = [];
-var largeInfowindow = new google.maps.InfoWindow();;
+var largeInfowindow = new google.maps.InfoWindow();
 
 var locations = [{
   title: 'TJs',
@@ -43,47 +43,47 @@ var locations = [{
 
 // Get the business data for a particular business. 
 // Create a hash with keys 'yelp_id' and 'yelp_phone_number' and add it to the yelp_phone_numbers array
-function getYelpData(yelp_id){
-	var YELP_KEY = 'cAXAelu07C1YZchkAiGqdQ';
-	var YELP_KEY_SECRET = 'po2IQrHCSCh64RJgveE7m1c27hI';
-	var YELP_TOKEN = 'AkyRdT_A_47c_iEv88Nl4H7x37G_AA7G';
-	var YELP_TOKEN_SECRET = '92RFWcnCCHeO7H-XLC08kvvDhHA';
+function getYelpData(yelp_id) {
+  var YELP_KEY = 'cAXAelu07C1YZchkAiGqdQ';
+  var YELP_KEY_SECRET = 'po2IQrHCSCh64RJgveE7m1c27hI';
+  var YELP_TOKEN = 'AkyRdT_A_47c_iEv88Nl4H7x37G_AA7G';
+  var YELP_TOKEN_SECRET = '92RFWcnCCHeO7H-XLC08kvvDhHA';
 
-	var parameters = {
-		oauth_consumer_key: YELP_KEY,
-		oauth_token: YELP_TOKEN,
-		oauth_timestamp: Math.floor(Date.now()/1000),
-		oauth_signature_method: 'HMAC-SHA1',
-		oauth_nonce: Math.floor(Math.random() * 1e12).toString(),
-		oauth_version : '1.0',
-		callback: 'cb'
-	};
-	var yelp_url = 'https://api.yelp.com/v2/business/' + yelp_id;
+  var parameters = {
+    oauth_consumer_key: YELP_KEY,
+    oauth_token: YELP_TOKEN,
+    oauth_timestamp: Math.floor(Date.now() / 1000),
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_nonce: Math.floor(Math.random() * 1e12).toString(),
+    oauth_version: '1.0',
+    callback: 'cb'
+  };
+  var yelp_url = 'https://api.yelp.com/v2/business/' + yelp_id;
 
-	var encodedSignature = oauthSignature.generate('GET',yelp_url, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
+  var encodedSignature = oauthSignature.generate('GET', yelp_url, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
   parameters.oauth_signature = encodedSignature;
 
-	var obj = {};
+  var obj = {};
   var settings = {
     url: yelp_url,
     data: parameters,
-    cache: true,                // This is crucial to include as well to prevent jQuery from adding on a cache-buster parameter "_=23489489749837", invalidating our oauth-signature
+    cache: true, // This is crucial to include as well to prevent jQuery from adding on a cache-buster parameter "_=23489489749837", invalidating our oauth-signature
     dataType: 'jsonp',
     success: function(results) {
-    	obj.yelp_id = yelp_id;
-    	obj.yelp_phone_number = results.display_phone;
-     	yelp_phone_numbers.push(obj);
+      obj.yelp_id = yelp_id;
+      obj.yelp_phone_number = results.display_phone;
+      yelp_phone_numbers.push(obj);
     },
     fail: function() {
       obj.yelp_id = yelp_id;
-    	obj.yelp_phone_number = "ERROR: Could not get phone number from Yelp!!! ";
-     	yelp_phone_numbers.push(obj);
+      obj.yelp_phone_number = "ERROR: Could not get phone number from Yelp!!! ";
+      yelp_phone_numbers.push(obj);
     }
   };
 
-	var yelpRequestTimeout = setTimeout(function() {
-           alert ("Yelp is unavailable. Please try again later.");
-         }, 5000);
+  var yelpRequestTimeout = setTimeout(function() {
+    alert("Yelp is unavailable. Please try again later.");
+  }, 5000);
   // Send AJAX query via jQuery library.
   $.ajax(settings);
 
@@ -92,9 +92,9 @@ function getYelpData(yelp_id){
 
 // Update the 'yelp_phone_numbers' array for each location
 // This needs to happen before the google map is loaded. 
-function loadYelpPhoneNumbers(){
-	for (var i = 0; i < locations.length; i++) {
-		getYelpData(locations[i].yelp_id);
+function loadYelpPhoneNumbers() {
+  for (var i = 0; i < locations.length; i++) {
+    getYelpData(locations[i].yelp_id);
   }
 }
 loadYelpPhoneNumbers();
@@ -111,12 +111,12 @@ function initMap() {
     zoom: 13
   });
 
-	// When window is resizes, resize the map 
-	google.maps.event.addDomListener(window, "resize", function() {
-	   var center = map.getCenter();
-	   google.maps.event.trigger(map, "resize");
-	   map.setCenter(center); 
-	});
+  // When window is resizes, resize the map 
+  google.maps.event.addDomListener(window, "resize", function() {
+    var center = map.getCenter();
+    google.maps.event.trigger(map, "resize");
+    map.setCenter(center);
+  });
 
   var bounds = new google.maps.LatLngBounds();
 
@@ -146,16 +146,16 @@ function initMap() {
 }
 
 // Bounce the selected marker. THis happens both when the location is clicked and when the marker is clicked
-function animateMarker(marker){
-	resetAllAnimations();
+function animateMarker(marker) {
+  resetAllAnimations();
   marker.setAnimation(google.maps.Animation.BOUNCE);
 }
 
 //Reset other animations so only the active location bounces
-function resetAllAnimations(){
-	for (marker of markers){
-		 marker.setAnimation(null);
-	}
+function resetAllAnimations() {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setAnimation(null);
+  }
 }
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -167,18 +167,20 @@ function populateInfoWindow(marker, yelp_id) {
     largeInfowindow.marker = marker;
 
     //Find the corresponding phone number for this marker
-    var result = $.grep(yelp_phone_numbers, function(e){ return e.yelp_id == yelp_id; });
+    var result = $.grep(yelp_phone_numbers, function(e) {
+      return e.yelp_id == yelp_id;
+    });
     var yelp_info = "Something wrong with the result ";
-    if (result[0]){
-			yelp_info = result[0].yelp_phone_number;
+    if (result[0]) {
+      yelp_info = result[0].yelp_phone_number;
     } else {
-    	yelp_info = yelp_id;
+      yelp_info = yelp_id;
     }
     largeInfowindow.setContent('<div>' + marker.title + '<br>' + yelp_info + '</div>');
     largeInfowindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed.
     largeInfowindow.addListener('closeclick', function() {
-    	largeInfowindow.marker.setAnimation(null);
+      largeInfowindow.marker.setAnimation(null);
       largeInfowindow.setMarker(null);
     });
   }
@@ -187,7 +189,7 @@ function populateInfoWindow(marker, yelp_id) {
 initMap();
 
 function mapError() {
-	$('#map').append('<h2 class="error">Google Maps unavailable </h2>');
+  $('#map').append('<h2 class="error">Google Maps unavailable </h2>');
 }
 
 //Holds the location data necessary
