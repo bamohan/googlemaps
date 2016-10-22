@@ -16,7 +16,7 @@ button {
 	font-size: 16px;
 }
 
-#map {
+.map-canvas {
    height: 100%;
 }
 

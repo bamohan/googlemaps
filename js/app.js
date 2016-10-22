@@ -64,6 +64,10 @@ function getYelpData(yelp_id) {
   parameters.oauth_signature = encodedSignature;
 
   var obj = {};
+  var yelpRequestTimeout = setTimeout(function() {
+    alert("Yelp is unavailable. Please try again later.");
+  }, 8000);
+
   var settings = {
     url: yelp_url,
     data: parameters,
@@ -73,21 +77,20 @@ function getYelpData(yelp_id) {
       obj.yelp_id = yelp_id;
       obj.yelp_phone_number = results.display_phone;
       yelp_phone_numbers.push(obj);
+
+  		clearTimeout(yelpRequestTimeout);
     },
-    fail: function() {
+    error: function(e) {
       obj.yelp_id = yelp_id;
       obj.yelp_phone_number = "ERROR: Could not get phone number from Yelp!!! ";
       yelp_phone_numbers.push(obj);
     }
   };
 
-  var yelpRequestTimeout = setTimeout(function() {
-    alert("Yelp is unavailable. Please try again later.");
-  }, 5000);
+
   // Send AJAX query via jQuery library.
   $.ajax(settings);
 
-  clearTimeout(yelpRequestTimeout);
 }
 
 // Update the 'yelp_phone_numbers' array for each location
@@ -149,6 +152,9 @@ function initMap() {
 function animateMarker(marker) {
   resetAllAnimations();
   marker.setAnimation(google.maps.Animation.BOUNCE);
+  setTimeout(function() { 
+    marker.setAnimation(null); 
+	}, 750)
 }
 
 //Reset other animations so only the active location bounces
@@ -189,7 +195,7 @@ function populateInfoWindow(marker, yelp_id) {
 initMap();
 
 function mapError() {
-  $('#map').append('<h2 class="error">Google Maps unavailable </h2>');
+  $('.map').append('<h2 class="error">Google Maps unavailable </h2>');
 }
 
 //Holds the location data necessary
