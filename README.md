@@ -2,19 +2,16 @@ Udacity Project 5 - Neighborhood Map
 --------------------------------------------------------------------------------
 
 This project was to incorporate the Google Maps API with Knockout JS to create a 
-neighborhood map of interesting locations.  Functionality should include clickable list and markers, 
-filtering search capability of list and markers, and the use of a third party API (Yelp). Error handling must be 
-used in case of failure to load.
+neighborhood map of interesting locations.  
 
-1. At least 5 locations important to me
-2. Google map with markers showing location of the attractions.
-3. Infowindows open with information about the specified location and markers bounce when clicked
-4. Integration of Yelp API.  Displays the phone number retrieved from Yelp
-5. List of locations animate appropriate marker when clicked
-6. List search/filter is functional and filters with markers
-7. Error handling is set for Google API and Yelp API.
-8. Application is responsive to different device sizes.
+Here are the features of the app:
+* Enter search criteria in the text field to filter locations matching the search criteria. This should filter both the markers and the list of locations that match the search criteria
+* Click on a marker to get more information about the location. This should display the name and phone number from Yelp
+* Clicking an item in the location list selects the corresponding marker
+* The active location marker bounces when selected
+	 
 
 Some resources- 
 * http://stackoverflow.com/questions/15421369/responsive-google-map - for resizing trick
 * Forums
+* Yelp API
