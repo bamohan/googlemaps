@@ -1,7 +1,7 @@
 var map;
 var markers = [];
 var yelp_phone_numbers = [];
-var largeInfowindow = new google.maps.InfoWindow();
+var largeInfowindow;
 
 var locations = [{
   title: 'TJs',
@@ -105,6 +105,7 @@ loadYelpPhoneNumbers();
 
 //Initialize google map,  markers and info windows for the google map 
 function initMap() {
+	largeInfowindow = new google.maps.InfoWindow();
   var firstOne = locations[0].location;
   map = new google.maps.Map(document.getElementById('map'), {
     center: {
@@ -146,6 +147,8 @@ function initMap() {
     bounds.extend(markers[i].position);
   }
   map.fitBounds(bounds);
+
+  ko.applyBindings(new ViewModel());
 }
 
 // Bounce the selected marker. THis happens both when the location is clicked and when the marker is clicked
@@ -186,13 +189,13 @@ function populateInfoWindow(marker, yelp_id) {
     largeInfowindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed.
     largeInfowindow.addListener('closeclick', function() {
-      largeInfowindow.marker.setAnimation(null);
+    	if (largeInfowindow.marker != null){
+      	largeInfowindow.marker.setAnimation(null);
+    	}
       largeInfowindow.marker = null;
     });
   }
 }
-
-initMap();
 
 function mapError() {
   $('.map').append('<h2 class="error">Google Maps unavailable </h2>');
@@ -229,22 +232,22 @@ var ViewModel = function() {
 
   // Calculate the short list of items when a search is performed
   this.filteredList = ko.computed(function() {
-    var filter = self.currentFilter();
+  	// case insensitive search
+    var filter = self.currentFilter().toLowerCase();
     if (!filter) {
       var originalList = self.locationList();
       for (var i = 0; i < originalList.length; i++) {
-        originalList[i].marker.setVisible(true);
+      	if (markers[i] != null){
+        	markers[i].setVisible(true);
+      	}
       }
       return originalList;
     } else {
       filtered = ko.utils.arrayFilter(self.locationList(), function(item) {
-        if (item.title.toLowerCase().includes(filter.toLowerCase())) {
-          item.marker.setVisible(true);
-          return true;
-        } else {
-          item.marker.setVisible(false);
-          return false;
-        }
+      	var title = item.title.toLowerCase();
+      	var match = title.includes(filter);
+        item.marker.setVisible(match);
+        return match;
       });
       return filtered;
     }
@@ -252,4 +255,3 @@ var ViewModel = function() {
 
 };
 
-ko.applyBindings(new ViewModel());
